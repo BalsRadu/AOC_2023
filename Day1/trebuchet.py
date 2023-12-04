@@ -49,45 +49,42 @@ digits = {
 }
 
 def first_puzzle_solution(line):
-    # Extracting all digits from the line
+    """
+    Solves the first puzzle by extracting the first and last digit from the line and forming a two-digit number.
+    """
     digits = re.findall(r'\d', line)
 
-    # Extracting the first and last digit as a two-digit number, if available
     return int(digits[0] + digits[-1])
 
 def second_puzzle_solution(line):
-    # Regular expression pattern to match spelled-out numbers
+    """
+    Solves the second puzzle by identifying spelled-out numbers and digits, and forming a two-digit number from the first and last digit found.
+    """
     pattern = '|'.join(digits.keys())
     regex = re.compile(pattern)
 
-    # This list will store all the digits (as strings) extracted from the line
     extracted_digits = []
 
     i = 0
     while i < len(line):
-        # Check for a match starting at the current position
         match = regex.match(line, i)
         if match:
-            # If there is a match, add the corresponding digit to the list
             extracted_digits.append(digits[match.group()])
-            # Move to the next character after the start of the match
             i = match.start() + 1
         else:
-            # If there is no match, check if the current character is a digit
             if line[i].isdigit():
                 extracted_digits.append(line[i])
-            # Move to the next character
             i += 1
 
-    # Extracting the first and last digit as a two-digit number, if available
     return int(extracted_digits[0] + extracted_digits[-1])
-
 
 with open("input.txt") as file:
     lines = file.readlines()
+
 
     sum_first_puzzle = sum([first_puzzle_solution(line) for line in lines])
     sum_second_puzzle = sum([second_puzzle_solution(line) for line in lines])
 
     print("First puzzle solution:", sum_first_puzzle)
     print("Second puzzle solution:", sum_second_puzzle)
+
