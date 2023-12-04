@@ -51,12 +51,7 @@ def first_puzzle_solution(line):
     digits = re.findall(r'\d', line)
 
     # Extracting the first and last digit as a two-digit number, if available
-    if len(digits) >= 2:
-        return int(digits[0] + digits[-1])
-    elif len(digits) == 1:
-        return int(digits[0] * 2)  # Repeat the digit if there's only one
-    else:
-        return 0  # Return 0 if no digits found
+    return int(digits[0] + digits[-1])
 
 def second_puzzle_solution(line):
     # Regular expression pattern to match spelled-out numbers
@@ -83,12 +78,7 @@ def second_puzzle_solution(line):
             i += 1
 
     # Extracting the first and last digit as a two-digit number, if available
-    if len(extracted_digits) >= 2:
-        return int(extracted_digits[0] + extracted_digits[-1])
-    elif len(extracted_digits) == 1:
-        return int(extracted_digits[0] * 2)  # Repeat the digit if there's only one
-    else:
-        return 0  # Return 0 if no digits found
+    return int(extracted_digits[0] + extracted_digits[-1])
 
 
 with open("input.txt") as file:
