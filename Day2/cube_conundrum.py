@@ -100,5 +100,5 @@ with open("input.txt") as file:
         min_red, min_green, min_blue = second_puzzle_solution(cube_counts)
         total_power_sum += min_red * min_green * min_blue
 
-print("First puzzle solution:", possible_games_sum)
-print("Second puzzle solution:", total_power_sum)
+    print("First puzzle solution:", possible_games_sum)
+    print("Second puzzle solution:", total_power_sum)
