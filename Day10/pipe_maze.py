@@ -1,4 +1,3 @@
-
 def parse_layout(layout):
     """
     Parse the layout into a grid and return the grid and the starting position.
@@ -28,17 +27,20 @@ connections = {
 }
 
 def infer_start_tile(grid, start_pos):
+    """
+    Infer the starting tile type from the connections of its neighbors.
+    """
     x, y = start_pos
     for pipe_type, directions in connections.items():
-        is_valid = True
+        connected_neighbors = 0
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
             if 0 <= nx < len(grid[0]) and 0 <= ny < len(grid) and grid[ny][nx] not in ['.', 'S']:
                 neighbor_directions = connections.get(grid[ny][nx], [])
-                if (-dx, -dy) not in neighbor_directions:
-                    is_valid = False
-                    break
-        if is_valid:
+                if (-dx, -dy) in neighbor_directions:
+                    connected_neighbors += 1
+        # The correct tile type should connect to exactly two neighbors
+        if connected_neighbors == 2:
             return pipe_type
     return None
 
@@ -122,23 +124,53 @@ def find_loop_boundaries(grid, start_pos, start_tile_type):
     return boundaries
 
 
+def clean_layout(grid, boundaries):
+    """
+    Clean the layout to keep only the pipes that are part of the loop.
+    """
+    cleaned_grid = [['.' for _ in range(len(grid[0]))] for _ in range(len(grid))]
+
+    for y in boundaries:
+        for x in boundaries[y]:
+            cleaned_grid[y][x] = grid[y][x]
+
+    return cleaned_grid
+
+def count_enclosed_tiles(grid):
+    """
+    Count the number of tiles enclosed within the loop.
+    """
+    enclosed_tiles = 0
+
+    for row in grid:
+        inside_loop = False
+        for tile in row:
+            if tile in ['|', 'L', 'J']:
+                inside_loop = not inside_loop
+            elif inside_loop and tile == '.':
+                enclosed_tiles += 1
+
+    return enclosed_tiles
+
+
+
 with open("input.txt") as file:
     pipe_layout = file.read()
 
     # Parse the layout and find the loop length
     grid, start_pos = parse_layout(pipe_layout)
-
     # Infer the starting tile type
     start_tile_type = infer_start_tile(grid, start_pos)
-
+    # Find the loop length
     loop_length = find_loop_length(grid, start_pos, start_tile_type)
 
-    # Find the loop boundaries and calculate the enclosed area
+    # Find the boundaries of the loop
     boundaries = find_loop_boundaries(grid, start_pos, start_tile_type)
-
-
+    # Clean the layout to keep only the pipes that are part of the loop
+    cleaned_grid = clean_layout(grid, boundaries)
+    # Count the number of tiles enclosed within the loop
+    enclosed_tiles = count_enclosed_tiles(cleaned_grid)
 
     print("First puzzle solution:", loop_length)
-
-
+    print("Second puzzle solution:", enclosed_tiles)
 
