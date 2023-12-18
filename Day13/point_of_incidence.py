@@ -138,9 +138,9 @@ def is_horizontal_reflection(pattern, row):
 
     return True
 
-def find_reflection_line_enhanced(pattern, original_reflection_line=None):
+def find_reflection_line(pattern, original_reflection_line=None):
     """
-    Enhanced method to find the reflection line in the given pattern.
+    Find the reflection line in the pattern.
     """
     num_rows = len(pattern)
     num_cols = len(pattern[0])
@@ -203,7 +203,7 @@ def flip_character(char):
     """
     return '#' if char == '.' else '.'
 
-def find_smudge_and_fix(pattern, reflection_line):
+def find_smudge_and_fix(pattern):
     """
     Locate the smudge in the pattern and determine the new, different reflection line.
     This involves iterating over rows and columns to find a flip that results in a different reflection.
@@ -211,7 +211,7 @@ def find_smudge_and_fix(pattern, reflection_line):
     num_rows = len(pattern)
     num_cols = len(pattern[0])
 
-    original_reflection_line = find_reflection_line_enhanced(pattern)
+    original_reflection_line = find_reflection_line(pattern)
 
     for row in range(num_rows):
         for col in range(num_cols):
@@ -219,7 +219,7 @@ def find_smudge_and_fix(pattern, reflection_line):
             modified_pattern = [list(r) for r in pattern]
             modified_pattern[row][col] = flip_character(modified_pattern[row][col])
 
-            new_reflection_line = find_reflection_line_enhanced([''.join(r) for r in modified_pattern], original_reflection_line)
+            new_reflection_line = find_reflection_line([''.join(r) for r in modified_pattern], original_reflection_line)
 
             # Check if the new reflection line is different from the original and valid
             if new_reflection_line[0] is not None and new_reflection_line != original_reflection_line:
@@ -233,7 +233,7 @@ with open('input.txt', 'r') as file:
     patterns = get_patterns(input_data)
 
     # Finding the reflection lines for each pattern
-    reflection_lines = [find_reflection_line_enhanced(pattern) for pattern in patterns]
+    reflection_lines = [find_reflection_line(pattern) for pattern in patterns]
     # Calculating the summary number for each pattern
     summary_number = calculate_summary_number(reflection_lines)
 
